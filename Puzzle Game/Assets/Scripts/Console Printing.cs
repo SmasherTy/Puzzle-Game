@@ -11,6 +11,6 @@ public class ConsolePrinting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log("Frame Update");
     }
 }
