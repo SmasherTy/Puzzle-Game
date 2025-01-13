@@ -1,18 +1,39 @@
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] public int movementSpeed;
-    [SerializeField] SpriteRenderer spriteRenderer;
-    [SerializeField] Animator animationController;
-    [SerializeField] Rigidbody2D rigidBody;
-    private void Update()
-    {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+    public static PlayerController Instance;
+    
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Animator animator;
 
-        Vector3 movement = new Vector3(horizontalInput, 0, verticalInput) * movementSpeed * Time.deltaTime;
-        transform.Translate(movement, Space.Self);
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float runSpeed;
+    public Vector3 playerMoveDirection;
+
+    void Update()
+    {
+        float inputX = Input.GetAxisRaw("Horizontal");
+        float inputY = Input.GetAxisRaw("Vertical");
+        playerMoveDirection = new Vector3(inputX, inputY).normalized;
+
+         bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        float currentSpeed = isRunning ? runSpeed : moveSpeed;
+
+        rb.linearVelocity = playerMoveDirection * currentSpeed;
+
+        animator.SetFloat("moveX", inputX);
+        animator.SetFloat("moveY", inputY);
+        animator.SetFloat("speed", rb.linearVelocity.magnitude);
+        animator.SetBool("isRunning", isRunning);
+        if (playerMoveDirection == Vector3.zero){
+            animator.SetBool("moving", false);
+        } else {
+            animator.SetBool("moving", true);
+        }
+    }
+    void FixedUpdate(){
+        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : moveSpeed;
+        rb.linearVelocity = new Vector2(playerMoveDirection.x * currentSpeed, playerMoveDirection.y * currentSpeed);
     }
 }
