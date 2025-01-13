@@ -7,6 +7,8 @@ public class ConsolePrinting : MonoBehaviour
     {
         Debug.Log("Hell nah this mine");
         Debug.Log("This is Trace's Code");
+        Debug.Log("This is Tylers Code");
+
     }
 
     // Update is called once per frame
